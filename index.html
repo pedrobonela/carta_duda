@@ -206,10 +206,19 @@
         background-color: #d9534f;
         color: #fff;
       }
+      #backgroundCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100vw;
+        height: 100vh;
+      }
     </style>
   </head>
 
   <body>
+  <canvas id="backgroundCanvas"></canvas>
     <div class="envlope-wrapper">
       <div id="envelope" class="close">
         <div class="front flap"></div>
@@ -217,9 +226,9 @@
         <div class="letter">
           
           <div class="words line1">Para: Duda</div>
-          <div class="words line2">Açaízinho hoje?</div>
+          <div class="words line2">Açaízinho pós aula amanhã?</div>
           <div class="words line3">Te levo pra casa depois</div>
-          <div class="words line4">Ass: Pedro</div>
+          <div class="words line4">ㅤㅤㅤㅤAss: Pedro</div>
         </div>
         <div class="hearts">
           <div class="heart a1"></div>
@@ -260,6 +269,55 @@
         function fechar() {
           envelope.addClass("close").removeClass("open");
         }
+      });
+    </script>
+
+    <script>
+      const canvas = document.getElementById('backgroundCanvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = [];
+
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.5,
+          dy: (Math.random() - 0.5) * 0.5
+        });
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < particles.length; i++) {
+          let p = particles[i];
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "#ffb6c1"; // cor das bolinhas
+          ctx.fill();
+
+          p.x += p.dx;
+          p.y += p.dy;
+
+          if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        }
+
+        requestAnimationFrame(animateParticles);
+      }
+
+      animateParticles();
+
+      // Atualiza o tamanho do canvas ao redimensionar
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       });
     </script>
   </body>
